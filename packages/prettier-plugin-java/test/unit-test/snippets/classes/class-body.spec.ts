@@ -5,7 +5,7 @@ describe("Class Body", () => {
     expectSnippetToBeFormatted({
       snippet: "{ }",
       expectedOutput: "{}",
-      entryPoint: "classBody"
+      entryPoint: "classBody",
     });
   });
 
@@ -19,7 +19,7 @@ describe("Class Body", () => {
     expectSnippetToBeFormatted({
       snippet: "{int i;}",
       expectedOutput,
-      entryPoint: "classBody"
+      entryPoint: "classBody",
     });
   });
 
@@ -45,7 +45,7 @@ describe("Class Body", () => {
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "classBody"
+      entryPoint: "classBody",
     });
   });
 
@@ -71,7 +71,7 @@ describe("Class Body", () => {
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "classBody"
+      entryPoint: "classBody",
     });
   });
 
@@ -101,7 +101,7 @@ describe("Class Body", () => {
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "classBody"
+      entryPoint: "classBody",
     });
   });
 
@@ -110,7 +110,7 @@ describe("Class Body", () => {
       expectSnippetToBeFormatted({
         snippet: "{;;}",
         expectedOutput: "{}",
-        entryPoint: "classBody"
+        entryPoint: "classBody",
       });
     });
 
@@ -139,7 +139,7 @@ describe("Class Body", () => {
       expectSnippetToBeFormatted({
         snippet,
         expectedOutput,
-        entryPoint: "classBody"
+        entryPoint: "classBody",
       });
     });
 
@@ -170,7 +170,7 @@ describe("Class Body", () => {
       expectSnippetToBeFormatted({
         snippet,
         expectedOutput,
-        entryPoint: "classBody"
+        entryPoint: "classBody",
       });
     });
 
@@ -178,7 +178,7 @@ describe("Class Body", () => {
       expectSnippetToBeFormatted({
         snippet: "{;/* TODO */;}",
         expectedOutput: "{\n" + "  /* TODO */\n" + "}",
-        entryPoint: "classBody"
+        entryPoint: "classBody",
       });
     });
 
@@ -208,7 +208,7 @@ describe("Class Body", () => {
       expectSnippetToBeFormatted({
         snippet,
         expectedOutput,
-        entryPoint: "classBody"
+        entryPoint: "classBody",
       });
     });
   });

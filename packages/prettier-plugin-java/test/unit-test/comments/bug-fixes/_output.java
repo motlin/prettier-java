@@ -1,6 +1,5 @@
 // Bug Fix: #279 - See also https://prettier.io/docs/en/rationale.html#comments
 class T {
-
   /*
    * comment
    */

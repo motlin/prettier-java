@@ -8,10 +8,10 @@ describe("prettier-java: require-pragma option", () => {
   [
     path.resolve(__dirname, "./format-pragma"),
     path.resolve(__dirname, "./prettier-pragma"),
-    path.resolve(__dirname, "./invalid-pragma")
-  ].forEach(testFolder => {
+    path.resolve(__dirname, "./invalid-pragma"),
+  ].forEach((testFolder) => {
     testSampleWithOptions({
-      testFolder
+      testFolder,
     });
   });
 });

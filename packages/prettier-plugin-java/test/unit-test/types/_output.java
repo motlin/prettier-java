@@ -1,5 +1,4 @@
 public class Types {
-
   public void primitiveTypes() {
     byte byteVariable;
     short shortVariable;

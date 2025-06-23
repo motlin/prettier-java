@@ -1,6 +1,5 @@
 // @formatter:on
 public class PrettierIgnoreClass {
-
   public void myMethod(
     int param1,
     int param2,
@@ -24,7 +23,6 @@ public class PrettierIgnoreClass {
 
 // @formatter:on
 public class PrettierIgnoreClass {
-
   public void myMethod(
     int param1,
     int param2,

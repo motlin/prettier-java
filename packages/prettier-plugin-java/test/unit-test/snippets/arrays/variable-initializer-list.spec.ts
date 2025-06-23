@@ -5,7 +5,7 @@ describe("VariableInitializerList", () => {
     expectSnippetToBeFormatted({
       snippet: "alpha ",
       expectedOutput: "alpha",
-      entryPoint: "variableInitializerList"
+      entryPoint: "variableInitializerList",
     });
   });
 
@@ -13,7 +13,7 @@ describe("VariableInitializerList", () => {
     expectSnippetToBeFormatted({
       snippet: "alpha,beta, gamma",
       expectedOutput: "alpha,\nbeta,\ngamma",
-      entryPoint: "variableInitializerList"
+      entryPoint: "variableInitializerList",
     });
   });
 });

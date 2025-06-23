@@ -1,5 +1,4 @@
 class Test {
-
   enum Day {
     MONDAY,
     TUESDAY,

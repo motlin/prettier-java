@@ -1,5 +1,4 @@
 public class GenericClass<BEAN extends Comparable<BEAN>> {
-
   private BEAN bean;
 
   public GenericClass(BEAN bean) {
@@ -30,7 +29,6 @@ public abstract class AbstractGenericClass<
   Value4 extends AbstractValue,
   Value5 extends AbstractValue
 > {
-
   public Value getValue() {
     return new Value();
   }

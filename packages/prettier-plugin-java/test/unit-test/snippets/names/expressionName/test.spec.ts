@@ -5,7 +5,7 @@ describe("expressionName", () => {
     expectSnippetToBeFormatted({
       snippet: "myExpression",
       expectedOutput: "myExpression",
-      entryPoint: "expressionName"
+      entryPoint: "expressionName",
     });
   });
 
@@ -13,7 +13,7 @@ describe("expressionName", () => {
     expectSnippetToBeFormatted({
       snippet: "myExpression.with.lot.of.dots",
       expectedOutput: "myExpression.with.lot.of.dots",
-      entryPoint: "expressionName"
+      entryPoint: "expressionName",
     });
   });
 });

@@ -1,5 +1,4 @@
 public class Expressions {
-
   public void equals(int i) {
     if (i == 1) {
       System.out.println("i equals 1");

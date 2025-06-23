@@ -2,7 +2,6 @@ import com.toto.titi.Test;
 import com.toto.titi.Toast;
 
 class TestClass {
-
   static String greetings() {
     return "Hello world!";
   }

@@ -111,7 +111,6 @@ public enum Enum {
 }
 
 class CLassWithEnum {
-
   public static enum VALID_THINGS {
     FIRST,
     SECOND,

@@ -1,5 +1,4 @@
 public class Instantiation {
-
   public void instantiation() {
     new Constructor("few", "arguments");
 

@@ -34,7 +34,6 @@ class H {
 }
 
 class I {
-
   // alpha
   // beta
   int i;
@@ -45,7 +44,6 @@ class I {
 }
 
 class J {
-
   void one() {}
 
   void two() {}

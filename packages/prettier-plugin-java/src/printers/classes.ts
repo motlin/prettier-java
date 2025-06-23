@@ -16,6 +16,7 @@ import {
   map,
   onlyDefinedKey,
   printBlock,
+  formatWithBraces,
   printClassPermits,
   printClassType,
   printDanglingComments,
@@ -24,11 +25,20 @@ import {
   printWithModifiers,
   type JavaNodePrinters,
   type JavaNonTerminal,
-  type JavaPrintFn
+  type JavaPrintFn,
+  type JavaParserOptions
 } from "./helpers.js";
 
-const { group, hardline, indent, indentIfBreak, join, line, softline } =
-  builders;
+const {
+  group,
+  hardline,
+  ifBreak,
+  indent,
+  indentIfBreak,
+  join,
+  line,
+  softline
+} = builders;
 
 export default {
   classDeclaration(path, print) {
@@ -41,7 +51,7 @@ export default {
     return printWithModifiers(path, print, "classModifier", declaration, true);
   },
 
-  normalClassDeclaration(path, print) {
+  normalClassDeclaration(path, print, options) {
     const { classExtends, classImplements, classPermits, typeParameters } =
       path.node.children;
     const header = ["class ", call(path, print, "typeIdentifier")];
@@ -57,7 +67,9 @@ export default {
     if (classPermits) {
       header.push(indent([line, call(path, print, "classPermits")]));
     }
-    return [group(header), " ", call(path, print, "classBody")];
+    const declaration = group(header);
+    const body = call(path, print, "classBody");
+    return formatWithBraces(declaration, body, options);
   },
 
   classModifier: printSingle,
@@ -92,8 +104,8 @@ export default {
     return group(printList(path, print, "interfaceType"));
   },
 
-  classBody(path, print) {
-    return printBlock(path, printClassBodyDeclarations(path, print));
+  classBody(path, print, options) {
+    return printBlock(path, printClassBodyDeclarations(path, print), options);
   },
 
   classBodyDeclaration: printSingle,
@@ -184,12 +196,19 @@ export default {
   unannInterfaceType: printSingle,
   unannTypeVariable: printSingle,
 
-  methodDeclaration(path, print) {
-    const declaration = [
-      call(path, print, "methodHeader"),
-      path.node.children.methodBody[0].children.Semicolon ? "" : " ",
-      call(path, print, "methodBody")
-    ];
+  methodDeclaration(path, print, options) {
+    const methodHeader = call(path, print, "methodHeader");
+    const methodBody = call(path, print, "methodBody");
+    const isAbstract = path.node.children.methodBody[0].children.Semicolon;
+
+    if (isAbstract) {
+      return printWithModifiers(path, print, "methodModifier", [
+        methodHeader,
+        ";"
+      ]);
+    }
+
+    const declaration = formatWithBraces(methodHeader, methodBody, options);
     return printWithModifiers(path, print, "methodModifier", declaration);
   },
 
@@ -285,16 +304,17 @@ export default {
   methodBody: printSingle,
   instanceInitializer: printSingle,
 
-  staticInitializer(path, print) {
-    return ["static ", call(path, print, "block")];
+  staticInitializer(path, print, options) {
+    return formatWithBraces("static", call(path, print, "block"), options);
   },
 
-  constructorDeclaration(path, print) {
-    const declaration = [call(path, print, "constructorDeclarator")];
+  constructorDeclaration(path, print, options) {
+    const declarator = [call(path, print, "constructorDeclarator")];
     if (path.node.children.throws) {
-      declaration.push(group(indent([line, call(path, print, "throws")])));
+      declarator.push(group(indent([line, call(path, print, "throws")])));
     }
-    declaration.push(" ", call(path, print, "constructorBody"));
+    const body = call(path, print, "constructorBody");
+    const declaration = formatWithBraces(declarator, body, options);
     return printWithModifiers(
       path,
       print,
@@ -328,7 +348,7 @@ export default {
 
   simpleTypeName: printSingle,
 
-  constructorBody(path, print) {
+  constructorBody(path, print, options) {
     const { children } = path.node;
     const statements: Doc[] = [];
     if (children.explicitConstructorInvocation) {
@@ -337,7 +357,7 @@ export default {
     if (children.blockStatements) {
       statements.push(call(path, print, "blockStatements"));
     }
-    return printBlock(path, statements);
+    return printBlock(path, statements, options);
   },
 
   explicitConstructorInvocation: printSingle,
@@ -378,12 +398,14 @@ export default {
     return invocation;
   },
 
-  enumDeclaration(path, print) {
+  enumDeclaration(path, print, options) {
     const header = ["enum", call(path, print, "typeIdentifier")];
     if (path.node.children.classImplements) {
       header.push(call(path, print, "classImplements"));
     }
-    return join(" ", [...header, call(path, print, "enumBody")]);
+    const declaration = join(" ", header);
+    const body = call(path, print, "enumBody");
+    return formatWithBraces(declaration, body, options);
   },
 
   enumBody(path, print, options) {
@@ -404,7 +426,7 @@ export default {
     if (hasNonEmptyDeclaration) {
       contents.push(";", hardline, call(path, print, "enumBodyDeclarations"));
     }
-    return printBlock(path, contents.length ? [contents] : []);
+    return printBlock(path, contents.length ? [contents] : [], options);
   },
 
   enumConstantList(path, print) {
@@ -425,14 +447,17 @@ export default {
     );
   },
 
-  enumConstant(path, print) {
+  enumConstant(path, print, options) {
     const { argumentList, classBody } = path.node.children;
     const initializer = [call(path, print, "Identifier")];
     if (argumentList) {
       initializer.push(group(["(", call(path, print, "argumentList"), ")"]));
     }
     if (classBody) {
-      initializer.push(" ", call(path, print, "classBody"));
+      const declaration = initializer.slice();
+      const body = call(path, print, "classBody");
+      const result = formatWithBraces(declaration, body, options);
+      return printWithModifiers(path, print, "enumConstantModifier", result);
     }
     return printWithModifiers(path, print, "enumConstantModifier", initializer);
   },
@@ -443,7 +468,7 @@ export default {
     return join(hardline, printClassBodyDeclarations(path, print));
   },
 
-  recordDeclaration(path, print) {
+  recordDeclaration(path, print, options) {
     const { children } = path.node;
     const header = ["record ", call(path, print, "typeIdentifier")];
     if (children.typeParameters) {
@@ -453,7 +478,9 @@ export default {
     if (children.classImplements) {
       header.push(" ", call(path, print, "classImplements"));
     }
-    return [group(header), " ", call(path, print, "recordBody")];
+    const declaration = group(header);
+    const body = call(path, print, "recordBody");
+    return formatWithBraces(declaration, body, options);
   },
 
   recordHeader(path, print) {
@@ -509,7 +536,7 @@ export default {
 
   recordComponentModifier: printSingle,
 
-  recordBody(path, print) {
+  recordBody(path, print, options) {
     const declarations: Doc[] = [];
     let previousRequiresPadding = false;
     each(
@@ -537,17 +564,15 @@ export default {
       },
       "recordBodyDeclaration"
     );
-    return printBlock(path, declarations);
+    return printBlock(path, declarations, options);
   },
 
   recordBodyDeclaration: printSingle,
 
-  compactConstructorDeclaration(path, print) {
-    const declaration = [
-      call(path, print, "simpleTypeName"),
-      " ",
-      call(path, print, "constructorBody")
-    ];
+  compactConstructorDeclaration(path, print, options) {
+    const declarator = call(path, print, "simpleTypeName");
+    const body = call(path, print, "constructorBody");
+    const declaration = formatWithBraces(declarator, body, options);
     return printWithModifiers(
       path,
       print,
@@ -566,10 +591,7 @@ function printClassBodyDeclarations(
     return [];
   }
   const declarations: Doc[] = [];
-  let previousRequiresPadding =
-    path.node.name === "enumBodyDeclarations" ||
-    (path.grandparent as JavaNonTerminal | null)?.name ===
-      "normalClassDeclaration";
+  let previousRequiresPadding = path.node.name === "enumBodyDeclarations";
   each(
     path,
     declarationPath => {

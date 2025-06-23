@@ -1,5 +1,4 @@
 class Indent {
-
   void indetMethod() {
     assertThat(
       useraaaaaaaaaaojzapjzpozjapjzpoajzpozaaaaaaaaaaaMapperlaaaaaaaaaaaaaaaaaaaaaaaa,

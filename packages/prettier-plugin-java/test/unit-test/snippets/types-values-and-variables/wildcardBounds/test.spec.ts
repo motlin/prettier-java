@@ -5,7 +5,7 @@ describe("Wildcard Bounds", () => {
     await expectSnippetToBeFormatted({
       snippet: "extends int[]",
       expectedOutput: "extends int[]",
-      entryPoint: "wildcardBounds"
+      entryPoint: "wildcardBounds",
     });
   });
 
@@ -13,7 +13,7 @@ describe("Wildcard Bounds", () => {
     await expectSnippetToBeFormatted({
       snippet: "super int[]",
       expectedOutput: "super int[]",
-      entryPoint: "wildcardBounds"
+      entryPoint: "wildcardBounds",
     });
   });
 });

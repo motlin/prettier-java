@@ -1,5 +1,4 @@
 public class TextBlock {
-
   void method() {
     String myTextBlock = """
            my text

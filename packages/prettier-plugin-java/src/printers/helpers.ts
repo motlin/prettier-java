@@ -258,22 +258,109 @@ export function printArrayInitializer<
     }
   }
   list.push(...printDanglingComments(path));
-  return list.length ? group(["{", indent([line, ...list]), line, "}"]) : "{}";
+
+  if (!list.length) {
+    return "{}";
+  }
+
+  if (options.braceStyle === "next-line") {
+    return group([hardline, "{", indent([softline, ...list]), softline, "}"]);
+  }
+
+  return group(["{", indent([line, ...list]), line, "}"]);
 }
 
-export function printBlock(path: AstPath<JavaNonTerminal>, contents: Doc[]) {
+export function printBlock(
+  path: AstPath<JavaNonTerminal>,
+  contents: Doc[],
+  options?: JavaParserOptions
+) {
   if (!contents.length) {
     const danglingComments = printDanglingComments(path);
+    if (options?.braceStyle === "next-line") {
+      return danglingComments.length
+        ? [
+            hardline,
+            "{",
+            indent([hardline, ...danglingComments]),
+            hardline,
+            "}"
+          ]
+        : [hardline, "{", hardline, "}"];
+    }
     return danglingComments.length
       ? ["{", indent([hardline, ...danglingComments]), hardline, "}"]
       : "{}";
   }
+
+  if (options?.braceStyle === "next-line") {
+    return [
+      hardline,
+      "{",
+      indent([hardline, ...join(hardline, contents)]),
+      hardline,
+      "}"
+    ];
+  }
+
   return group([
     "{",
     indent([hardline, ...join(hardline, contents)]),
     hardline,
     "}"
   ]);
+}
+
+export function printLambdaBlock(
+  path: AstPath<JavaNonTerminal>,
+  contents: Doc[],
+  options?: JavaParserOptions
+) {
+  if (!contents.length) {
+    const danglingComments = printDanglingComments(path);
+    if (options?.braceStyle === "next-line") {
+      return danglingComments.length
+        ? [
+            hardline,
+            "{",
+            indent([hardline, ...danglingComments]),
+            hardline,
+            "}"
+          ]
+        : "{}";
+    }
+    return danglingComments.length
+      ? ["{", indent([hardline, ...danglingComments]), hardline, "}"]
+      : "{}";
+  }
+
+  if (options?.braceStyle === "next-line") {
+    return group([
+      hardline,
+      "{",
+      indent([hardline, ...join(hardline, contents)]),
+      hardline,
+      "}"
+    ]);
+  }
+
+  return group([
+    "{",
+    indent([hardline, ...join(hardline, contents)]),
+    hardline,
+    "}"
+  ]);
+}
+
+export function formatWithBraces(
+  declaration: Doc | Doc[],
+  block: Doc | Doc[],
+  options: JavaParserOptions
+): Doc[] {
+  if (options.braceStyle === "next-line") {
+    return [declaration, block];
+  }
+  return [declaration, " ", block];
 }
 
 export function printName(
@@ -390,6 +477,7 @@ export type JavaNodePrinter<T> = (
 export type JavaPrintFn = (path: AstPath<JavaNode>, args?: unknown) => Doc;
 export type JavaParserOptions = ParserOptions<JavaNode> & {
   entrypoint?: string;
+  braceStyle?: "same-line" | "next-line";
 };
 export type IterProperties<T> = T extends any[]
   ? IndexProperties<T>

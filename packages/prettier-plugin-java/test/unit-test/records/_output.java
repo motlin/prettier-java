@@ -35,7 +35,6 @@ public record Pet() {
 }
 
 class T {
-
   String record = "1";
 
   void t() {
@@ -43,7 +42,6 @@ class T {
   }
 
   class MyRecordSimplifiedConstructor {
-
     record MyRecord(String name, int age) {
       public MyRecord {
         if (age < 0) {
@@ -58,7 +56,6 @@ class T {
   }
 
   class MyRecordConstructor {
-
     record MyRecord(String name, int age) {
       public MyRecord(String name, int age) {
         if (age < 0) {
@@ -72,7 +69,6 @@ class T {
   }
 
   public class MyRecordWithAnnotationAndModifiers {
-
     public record MyRecord(String name, int age) {
       @Annotation
       @Annotation2
@@ -90,7 +86,6 @@ class T {
 }
 
 class MySplitRecordConstructor {
-
   record MyRecord(
     String name,
     int age,

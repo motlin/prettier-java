@@ -5,7 +5,7 @@ describe("MethodName", () => {
     expectSnippetToBeFormatted({
       snippet: "test",
       expectedOutput: "test",
-      entryPoint: "methodName"
+      entryPoint: "methodName",
     });
   });
 });

@@ -5,7 +5,7 @@ describe("Arrays Initializer", () => {
     expectSnippetToBeFormatted({
       snippet: "{ }",
       expectedOutput: "{}",
-      entryPoint: "arrayInitializer"
+      entryPoint: "arrayInitializer",
     });
   });
 
@@ -13,7 +13,7 @@ describe("Arrays Initializer", () => {
     expectSnippetToBeFormatted({
       snippet: "{alpha}",
       expectedOutput: "{ alpha }",
-      entryPoint: "arrayInitializer"
+      entryPoint: "arrayInitializer",
     });
   });
 
@@ -22,14 +22,14 @@ describe("Arrays Initializer", () => {
       expectSnippetToBeFormatted({
         snippet: "{alpha,}",
         expectedOutput: "{ alpha }",
-        entryPoint: "arrayInitializer"
+        entryPoint: "arrayInitializer",
       });
     });
 
     it("should remove extra comma in arrayInitializer by default", () => {
       const snippet = "{oneVeryLongArrayValue,}";
       const prettierOptions = {
-        printWidth: 15
+        printWidth: 15,
       };
       // prettier-ignore
       const expectedOutput =
@@ -41,7 +41,7 @@ describe("Arrays Initializer", () => {
         snippet,
         expectedOutput,
         entryPoint: "arrayInitializer",
-        prettierOptions
+        prettierOptions,
       });
     });
 
@@ -51,8 +51,8 @@ describe("Arrays Initializer", () => {
         expectedOutput: "{ oneVeryLongArrayValue }",
         entryPoint: "arrayInitializer",
         prettierOptions: {
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -62,8 +62,8 @@ describe("Arrays Initializer", () => {
         expectedOutput: "{ oneVeryLongArrayValue }",
         entryPoint: "arrayInitializer",
         prettierOptions: {
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -80,8 +80,8 @@ describe("Arrays Initializer", () => {
         entryPoint: "arrayInitializer",
         prettierOptions: {
           printWidth: 15,
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -98,8 +98,8 @@ describe("Arrays Initializer", () => {
         entryPoint: "arrayInitializer",
         prettierOptions: {
           printWidth: 15,
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
   });

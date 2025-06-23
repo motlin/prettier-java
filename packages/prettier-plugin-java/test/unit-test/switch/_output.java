@@ -1,5 +1,4 @@
 class Switch {
-
   void simple(Answer answer) {
     switch (answer) {
       case YES:

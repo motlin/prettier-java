@@ -1,5 +1,4 @@
 public class MethodReference {
-
   public void referenceToAStaticMethod() {
     call(ContainingClass::staticMethodName);
   }

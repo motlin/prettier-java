@@ -1,5 +1,4 @@
 class T {
-
   static int count(Iterable<Order> orders) {
     int total = 0;
     for (Order _ : orders) // Unnamed variable
@@ -41,7 +40,7 @@ class T {
   }
 
   void tryWithResources() {
-    try (var _ = ScopedContext.acquire()) {
+    try(var _ = ScopedContext.acquire()) {
       // Unnamed variable
     }
   }

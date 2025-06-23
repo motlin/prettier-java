@@ -1,5 +1,4 @@
 public sealed class Rectangle implements Shape permits Square {
-
   private final double length;
   private final double height;
 
@@ -15,7 +14,6 @@ public sealed class Rectangle implements Shape permits Square {
 }
 
 public non-sealed class RightTriangle implements Triangle {
-
   private final double adjacent;
   private final double opposite;
 
@@ -87,14 +85,12 @@ public sealed class Shape
     ALongVeryLongUnicorn {}
 
 public class NestedSealedClasses {
-
   public abstract static sealed class SealedParent permits SealedChild {}
 
   static final class SealedChild extends SealedParent {}
 }
 
 public class NestedNonSealedClasses {
-
   public abstract static non-sealed class NonSealedParent {}
 
   static final class SealedChild extends NonSealedParent {}

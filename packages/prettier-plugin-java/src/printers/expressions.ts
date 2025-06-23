@@ -511,12 +511,12 @@ export default {
       : expressions;
   },
 
-  arrayCreationWithInitializerSuffix(path, print) {
-    return [
-      call(path, print, "dims"),
-      " ",
-      call(path, print, "arrayInitializer")
-    ];
+  arrayCreationWithInitializerSuffix(path, print, options) {
+    const dims = call(path, print, "dims");
+    const arrayInit = call(path, print, "arrayInitializer");
+    const spacing =
+      options.braceStyle === "next-line" && arrayInit !== "{}" ? "" : " ";
+    return [dims, spacing, arrayInit];
   },
 
   dimExprs(path, print) {

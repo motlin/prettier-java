@@ -5,7 +5,7 @@ describe("PackageOrTypeName", () => {
     expectSnippetToBeFormatted({
       snippet: "com",
       expectedOutput: "com",
-      entryPoint: "packageOrTypeName"
+      entryPoint: "packageOrTypeName",
     });
   });
 
@@ -13,7 +13,7 @@ describe("PackageOrTypeName", () => {
     expectSnippetToBeFormatted({
       snippet: "com.iluwatar.abstractdocument",
       expectedOutput: "com.iluwatar.abstractdocument",
-      entryPoint: "packageOrTypeName"
+      entryPoint: "packageOrTypeName",
     });
   });
 });

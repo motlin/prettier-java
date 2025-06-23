@@ -1,5 +1,4 @@
 public class BreakLongFunctionCall {
-
   public void doSomething() {
     return new Object().something().more();
   }

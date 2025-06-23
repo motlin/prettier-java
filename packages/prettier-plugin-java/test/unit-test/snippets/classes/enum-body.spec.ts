@@ -13,7 +13,7 @@ describe("Enum Body", () => {
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "enumBody"
+      entryPoint: "enumBody",
     });
   });
 
@@ -27,13 +27,13 @@ describe("Enum Body", () => {
       "  THREE,\n" +
       "}";
     const prettierOptions = {
-      trailingComma: "all"
+      trailingComma: "all",
     };
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
       entryPoint: "enumBody",
-      prettierOptions
+      prettierOptions,
     });
   });
 
@@ -47,13 +47,13 @@ describe("Enum Body", () => {
       "  THREE,\n" +
       "}";
     const prettierOptions = {
-      trailingComma: "all"
+      trailingComma: "all",
     };
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
       entryPoint: "enumBody",
-      prettierOptions
+      prettierOptions,
     });
   });
 
@@ -69,7 +69,7 @@ describe("Enum Body", () => {
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "enumBody"
+      entryPoint: "enumBody",
     });
   });
 
@@ -83,13 +83,13 @@ describe("Enum Body", () => {
       "  THREE,\n" +
       "}";
     const prettierOptions = {
-      trailingComma: "all"
+      trailingComma: "all",
     };
     expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
       entryPoint: "enumBody",
-      prettierOptions
+      prettierOptions,
     });
   });
 });

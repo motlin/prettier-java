@@ -5,7 +5,7 @@ describe("floatingPointType", () => {
     expectSnippetToBeFormatted({
       snippet: "float",
       expectedOutput: "float",
-      entryPoint: "floatingPointType"
+      entryPoint: "floatingPointType",
     });
   });
 
@@ -13,7 +13,7 @@ describe("floatingPointType", () => {
     expectSnippetToBeFormatted({
       snippet: "double",
       expectedOutput: "double",
-      entryPoint: "floatingPointType"
+      entryPoint: "floatingPointType",
     });
   });
 });

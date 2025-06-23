@@ -5,7 +5,7 @@ describe("element Value Array Initializer", () => {
     expectSnippetToBeFormatted({
       snippet: "{alpha}",
       expectedOutput: "{ alpha }",
-      entryPoint: "elementValueArrayInitializer"
+      entryPoint: "elementValueArrayInitializer",
     });
   });
 
@@ -14,7 +14,7 @@ describe("element Value Array Initializer", () => {
       expectSnippetToBeFormatted({
         snippet: "{alpha,}",
         expectedOutput: "{ alpha }",
-        entryPoint: "elementValueArrayInitializer"
+        entryPoint: "elementValueArrayInitializer",
       });
     });
 
@@ -30,8 +30,8 @@ describe("element Value Array Initializer", () => {
         expectedOutput,
         entryPoint: "elementValueArrayInitializer",
         prettierOptions: {
-          printWidth: 15
-        }
+          printWidth: 15,
+        },
       });
     });
 
@@ -41,8 +41,8 @@ describe("element Value Array Initializer", () => {
         expectedOutput: "{ oneVeryLongArrayValue }",
         entryPoint: "elementValueArrayInitializer",
         prettierOptions: {
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -52,8 +52,8 @@ describe("element Value Array Initializer", () => {
         expectedOutput: "{ oneVeryLongArrayValue }",
         entryPoint: "elementValueArrayInitializer",
         prettierOptions: {
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -70,8 +70,8 @@ describe("element Value Array Initializer", () => {
         entryPoint: "elementValueArrayInitializer",
         prettierOptions: {
           printWidth: 15,
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
 
@@ -88,8 +88,8 @@ describe("element Value Array Initializer", () => {
         entryPoint: "elementValueArrayInitializer",
         prettierOptions: {
           printWidth: 15,
-          trailingComma: "all"
-        }
+          trailingComma: "all",
+        },
       });
     });
   });

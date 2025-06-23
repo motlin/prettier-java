@@ -1,5 +1,4 @@
 class TemplateExpression {
-
   String info = STR."My name is \{name}";
 
   String s = STR."\{x} + \{y} = \{x + y}";

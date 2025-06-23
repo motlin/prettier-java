@@ -1,5 +1,4 @@
 public class PrettierIgnoreClass {
-
   int myInteger;
 
   public void myPrettierIgnoreMethod(

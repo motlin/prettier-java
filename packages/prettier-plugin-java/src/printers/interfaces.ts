@@ -10,11 +10,13 @@ import {
   onlyDefinedKey,
   printArrayInitializer,
   printBlock,
+  formatWithBraces,
   printClassPermits,
   printList,
   printSingle,
   printWithModifiers,
-  type JavaNodePrinters
+  type JavaNodePrinters,
+  type JavaParserOptions
 } from "./helpers.js";
 
 const { group, hardline, indent, join, line } = builders;
@@ -34,7 +36,7 @@ export default {
     );
   },
 
-  normalInterfaceDeclaration(path, print) {
+  normalInterfaceDeclaration(path, print, options) {
     const { interfaceExtends, interfacePermits, typeParameters } =
       path.node.children;
     const header = ["interface ", call(path, print, "typeIdentifier")];
@@ -47,7 +49,9 @@ export default {
     if (interfacePermits) {
       header.push(indent([line, call(path, print, "interfacePermits")]));
     }
-    return [group(header), " ", call(path, print, "interfaceBody")];
+    const declaration = group(header);
+    const body = call(path, print, "interfaceBody");
+    return formatWithBraces(declaration, body, options);
   },
 
   interfaceModifier: printSingle,
@@ -61,7 +65,7 @@ export default {
 
   interfacePermits: printClassPermits,
 
-  interfaceBody(path, print) {
+  interfaceBody(path, print, options) {
     const declarations: Doc[] = [];
     let previousRequiresPadding = false;
     each(
@@ -94,7 +98,7 @@ export default {
       },
       "interfaceMemberDeclaration"
     );
-    return printBlock(path, declarations);
+    return printBlock(path, declarations, options);
   },
 
   interfaceMemberDeclaration(path, print) {
@@ -116,12 +120,19 @@ export default {
 
   constantModifier: printSingle,
 
-  interfaceMethodDeclaration(path, print) {
-    const declaration = [
-      call(path, print, "methodHeader"),
-      path.node.children.methodBody[0].children.Semicolon ? "" : " ",
-      call(path, print, "methodBody")
-    ];
+  interfaceMethodDeclaration(path, print, options) {
+    const methodHeader = call(path, print, "methodHeader");
+    const methodBody = call(path, print, "methodBody");
+    const isAbstract = path.node.children.methodBody[0].children.Semicolon;
+
+    if (isAbstract) {
+      return printWithModifiers(path, print, "interfaceMethodModifier", [
+        methodHeader,
+        ";"
+      ]);
+    }
+
+    const declaration = formatWithBraces(methodHeader, methodBody, options);
     return printWithModifiers(
       path,
       print,
@@ -132,15 +143,16 @@ export default {
 
   interfaceMethodModifier: printSingle,
 
-  annotationInterfaceDeclaration(path, print) {
-    return join(" ", [
+  annotationInterfaceDeclaration(path, print, options) {
+    const declaration = join(" ", [
       "@interface",
-      call(path, print, "typeIdentifier"),
-      call(path, print, "annotationInterfaceBody")
+      call(path, print, "typeIdentifier")
     ]);
+    const body = call(path, print, "annotationInterfaceBody");
+    return formatWithBraces(declaration, body, options);
   },
 
-  annotationInterfaceBody(path, print) {
+  annotationInterfaceBody(path, print, options) {
     const declarations: Doc[] = [];
     each(
       path,
@@ -155,7 +167,7 @@ export default {
       },
       "annotationInterfaceMemberDeclaration"
     );
-    return printBlock(path, declarations);
+    return printBlock(path, declarations, options);
   },
 
   annotationInterfaceMemberDeclaration(path, print) {

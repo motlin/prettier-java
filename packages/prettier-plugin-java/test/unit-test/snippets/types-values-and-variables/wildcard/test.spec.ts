@@ -5,7 +5,7 @@ describe("Wildcard", () => {
     await expectSnippetToBeFormatted({
       snippet: "?",
       expectedOutput: "?",
-      entryPoint: "wildcard"
+      entryPoint: "wildcard",
     });
   });
 
@@ -13,7 +13,7 @@ describe("Wildcard", () => {
     await expectSnippetToBeFormatted({
       snippet: "@Anno ?",
       expectedOutput: "@Anno ?",
-      entryPoint: "wildcard"
+      entryPoint: "wildcard",
     });
   });
 
@@ -26,7 +26,7 @@ describe("Wildcard", () => {
     await expectSnippetToBeFormatted({
       snippet,
       expectedOutput,
-      entryPoint: "wildcard"
+      entryPoint: "wildcard",
     });
   });
 
@@ -34,7 +34,7 @@ describe("Wildcard", () => {
     await expectSnippetToBeFormatted({
       snippet: "? extends int[]",
       expectedOutput: "? extends int[]",
-      entryPoint: "wildcard"
+      entryPoint: "wildcard",
     });
   });
 });

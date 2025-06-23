@@ -1,5 +1,4 @@
 public class TryCatch {
-
   void tryFinally() {
     try {
       System.out.println("Try something");
@@ -51,7 +50,7 @@ public class TryCatch {
   }
 
   void resourceTry() {
-    try (Resource r = new Resource()) {
+    try(Resource r = new Resource()) {
       return br.readLine();
     } catch (ArithmeticException | ArrayIndexOutOfBoundsException e) {
       System.out.println("Warning: Not breaking multi exceptions");
@@ -59,7 +58,7 @@ public class TryCatch {
   }
 
   void multiResourceTry() {
-    try (
+    try(
       FirstResource firstResource = new FirstResource();
       SecondResource secondResource = new SecondResource()
     ) {
@@ -70,7 +69,7 @@ public class TryCatch {
   }
 
   void multiResourceTryWithTrailingSemi() {
-    try (
+    try(
       FirstResource firstResource = new FirstResource();
       SecondResource secondResource = new SecondResource();
     ) {

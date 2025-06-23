@@ -5,7 +5,7 @@ describe("integralType", () => {
     expectSnippetToBeFormatted({
       snippet: "byte",
       expectedOutput: "byte",
-      entryPoint: "integralType"
+      entryPoint: "integralType",
     });
   });
 
@@ -13,7 +13,7 @@ describe("integralType", () => {
     expectSnippetToBeFormatted({
       snippet: "short",
       expectedOutput: "short",
-      entryPoint: "integralType"
+      entryPoint: "integralType",
     });
   });
 
@@ -21,7 +21,7 @@ describe("integralType", () => {
     expectSnippetToBeFormatted({
       snippet: "int",
       expectedOutput: "int",
-      entryPoint: "integralType"
+      entryPoint: "integralType",
     });
   });
 
@@ -29,7 +29,7 @@ describe("integralType", () => {
     expectSnippetToBeFormatted({
       snippet: "long",
       expectedOutput: "long",
-      entryPoint: "integralType"
+      entryPoint: "integralType",
     });
   });
 
@@ -37,7 +37,7 @@ describe("integralType", () => {
     expectSnippetToBeFormatted({
       snippet: "char",
       expectedOutput: "char",
-      entryPoint: "integralType"
+      entryPoint: "integralType",
     });
   });
 });

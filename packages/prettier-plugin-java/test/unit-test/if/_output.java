@@ -1,5 +1,4 @@
 public class If {
-
   public void simpleIf(boolean one) {
     if (one) {
       System.out.println("one");

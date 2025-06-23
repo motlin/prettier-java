@@ -1,11 +1,10 @@
 public class PrettierTest {
-
   var x = 0;
 
   public void myFunction(int arg1) {
     try {
       // Empty Statement
-    } /*catch*/ catch (EmptyStackException e) {
+    }/*catch*/  catch (EmptyStackException e) {
       throw new RuntimeException(e);
     } /*multi-catch*/ catch (
       /*1*/ FirstException
@@ -15,7 +14,7 @@ public class PrettierTest {
       throw /*throw an exception*/ new /*don't forget new when throwing exceptions*/ RuntimeException(
         e2
       );
-    } /*is always executed no matter what*/ finally {
+    }/*is always executed no matter what*/  finally {
       System.out.println("That's all folks !");
     }
   }

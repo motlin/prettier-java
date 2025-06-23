@@ -1,5 +1,4 @@
 class LabeledStatements {
-
   void commentsLabeledStatementLineComment() {
     // Label statement
 

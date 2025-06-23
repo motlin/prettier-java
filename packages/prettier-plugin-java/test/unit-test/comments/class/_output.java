@@ -82,7 +82,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 public final class ArrayTable<R, C, V>
   extends AbstractTable<R, C, V>
   implements Serializable {
-
   /**
    * Returns the square of a given number
    * @param num the number to square
@@ -200,7 +199,6 @@ public final class ArrayTable<R, C, V>
 
   private abstract static class ArrayMap<K, V>
     extends IteratorBasedAbstractMap<K, V> {
-
     private final ImmutableMap<K, Integer> keyIndex;
 
     private ArrayMap(ImmutableMap<K, Integer> keyIndex) {
@@ -636,7 +634,6 @@ public final class ArrayTable<R, C, V>
   }
 
   private class Column extends ArrayMap<R, V> {
-
     final int columnIndex;
 
     Column(int columnIndex) {
@@ -681,7 +678,6 @@ public final class ArrayTable<R, C, V>
 
   @WeakOuter
   private class ColumnMap extends ArrayMap<C, Map<R, V>> {
-
     private ColumnMap() {
       super(columnKeyToIndex);
     }
@@ -726,7 +722,6 @@ public final class ArrayTable<R, C, V>
   }
 
   private class Row extends ArrayMap<C, V> {
-
     final int rowIndex;
 
     Row(int rowIndex) {
@@ -771,7 +766,6 @@ public final class ArrayTable<R, C, V>
 
   @WeakOuter
   private class RowMap extends ArrayMap<R, Map<C, V>> {
-
     private RowMap() {
       super(rowKeyToIndex);
     }

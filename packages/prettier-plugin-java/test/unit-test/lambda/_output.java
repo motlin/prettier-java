@@ -1,5 +1,4 @@
 public class Lambda {
-
   public void singleArgumentWithParens() {
     call(x -> {
       System.out.println(x);
@@ -565,7 +564,6 @@ public class Lambda {
 }
 
 class T {
-
   T() {
     super(x -> {
       // testing method

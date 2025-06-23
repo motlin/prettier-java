@@ -11,6 +11,7 @@ import {
   map,
   onlyDefinedKey,
   printBlock,
+  formatWithBraces,
   printDanglingComments,
   printSingle,
   printWithModifiers,
@@ -20,11 +21,11 @@ import {
 const { group, hardline, ifBreak, indent, join, line, softline } = builders;
 
 export default {
-  block(path, print) {
+  block(path, print, options) {
     const statements = path.node.children.blockStatements
       ? (call(path, print, "blockStatements") as Doc[])
       : [];
-    return printBlock(path, statements.length ? [statements] : []);
+    return printBlock(path, statements.length ? [statements] : [], options);
   },
 
   blockStatements(path, print) {
@@ -81,29 +82,47 @@ export default {
 
   statementExpression: printSingle,
 
-  ifStatement(path, print) {
+  ifStatement(path, print, options) {
     const { children } = path.node;
     const hasEmptyStatement = isEmptyStatement(children.statement[0]);
+    const ifHasBlock =
+      children.statement[0].children.statementWithoutTrailingSubstatement?.[0]
+        .children.block !== undefined;
+    const ifSpacing =
+      options.braceStyle === "next-line" && !ifHasBlock ? hardline : " ";
     const statement: Doc[] = [
       "if ",
       indentInParentheses(call(path, print, "expression")),
-      hasEmptyStatement ? ";" : [" ", call(path, print, "statement", 0)]
+      hasEmptyStatement ? ";" : [ifSpacing, call(path, print, "statement", 0)]
     ];
     if (children.Else) {
       const danglingComments = printDanglingComments(path);
       if (danglingComments.length) {
         statement.push(hardline, ...danglingComments, hardline);
       } else {
-        const elseHasBlock =
-          children.statement[0].children
-            .statementWithoutTrailingSubstatement?.[0].children.block !==
-          undefined;
-        statement.push(elseHasBlock ? " " : hardline);
+        statement.push(
+          options.braceStyle === "next-line"
+            ? hardline
+            : ifHasBlock
+              ? " "
+              : hardline
+        );
       }
       const elseHasEmptyStatement = isEmptyStatement(children.statement[1]);
+      const elseHasBlock =
+        children.statement[1].children.statementWithoutTrailingSubstatement?.[0]
+          .children.block !== undefined;
+      const elseBodyIsIf =
+        children.statement[1].children.ifStatement !== undefined;
+      const elseSpacing =
+        options.braceStyle === "next-line" && !elseHasBlock && !elseBodyIsIf
+          ? hardline
+          : " ";
       statement.push(
         "else",
-        elseHasEmptyStatement ? ";" : [" ", call(path, print, "statement", 1)]
+        elseHasEmptyStatement
+          ? ";"
+          : [elseSpacing, call(path, print, "statement", 1)]
       );
     }
     return statement;
@@ -121,14 +140,14 @@ export default {
     ]);
   },
 
-  switchBlock(path, print) {
+  switchBlock(path, print, options) {
     const { children } = path.node;
     const caseKeys = definedKeys(children, [
       "switchBlockStatementGroup",
       "switchRule"
     ]);
     const cases = caseKeys.length === 1 ? map(path, print, caseKeys[0]) : [];
-    return printBlock(path, cases);
+    return printBlock(path, cases, options);
   },
 
   switchBlockStatementGroup(path, print) {
@@ -203,22 +222,34 @@ export default {
   caseConstant: printSingle,
   casePattern: printSingle,
 
-  whileStatement(path, print) {
-    const statement = call(path, print, "statement");
+  whileStatement(path, print, options) {
     const hasEmptyStatement = isEmptyStatement(path.node.children.statement[0]);
+    const hasBlock =
+      path.node.children.statement[0].children
+        .statementWithoutTrailingSubstatement?.[0].children.block !== undefined;
+    const spacing =
+      options.braceStyle === "next-line" && !hasBlock ? hardline : " ";
     return [
       "while ",
       indentInParentheses(call(path, print, "expression")),
-      ...[hasEmptyStatement ? ";" : " ", statement]
+      hasEmptyStatement ? ";" : [spacing, call(path, print, "statement")]
     ];
   },
 
-  doStatement(path, print) {
+  doStatement(path, print, options) {
     const hasEmptyStatement = isEmptyStatement(path.node.children.statement[0]);
+    const hasBlock =
+      path.node.children.statement[0].children
+        .statementWithoutTrailingSubstatement?.[0].children.block !== undefined;
+    const spacing =
+      options.braceStyle === "next-line" && !hasBlock ? hardline : " ";
+    const whileSpacing =
+      options.braceStyle === "next-line" && !hasEmptyStatement ? hardline : " ";
     return [
       "do",
-      hasEmptyStatement ? ";" : [" ", call(path, print, "statement")],
-      " while ",
+      hasEmptyStatement ? ";" : [spacing, call(path, print, "statement")],
+      whileSpacing,
+      "while ",
       indentInParentheses(call(path, print, "expression")),
       ";"
     ];
@@ -226,7 +257,7 @@ export default {
 
   forStatement: printSingle,
 
-  basicForStatement(path, print) {
+  basicForStatement(path, print, options) {
     const { children } = path.node;
     const danglingComments = printDanglingComments(path);
     if (danglingComments.length) {
@@ -237,13 +268,19 @@ export default {
         expressionKey in children ? call(path, print, expressionKey) : ""
     );
     const hasEmptyStatement = isEmptyStatement(children.statement[0]);
+    const hasBlock =
+      children.statement[0].children.statementWithoutTrailingSubstatement?.[0]
+        .children.block !== undefined;
+    const spacing =
+      options.braceStyle === "next-line" && !hasBlock ? hardline : " ";
+
     return [
       ...danglingComments,
       "for ",
       expressions.some(expression => expression !== "")
         ? indentInParentheses(join([";", line], expressions))
         : "(;;)",
-      hasEmptyStatement ? ";" : [" ", call(path, print, "statement")]
+      hasEmptyStatement ? ";" : [spacing, call(path, print, "statement")]
     ];
   },
 
@@ -258,9 +295,9 @@ export default {
     );
   },
 
-  enhancedForStatement(path, print) {
+  enhancedForStatement(path, print, options) {
     const statementNode = path.node.children.statement[0];
-    const forStatement = [
+    const forStatement: Doc[] = [
       printDanglingComments(path),
       "for ",
       "(",
@@ -276,9 +313,15 @@ export default {
         statementNode.children.statementWithoutTrailingSubstatement?.[0]
           .children.block !== undefined;
       const statement = call(path, print, "statement");
-      forStatement.push(
-        hasStatementBlock ? [" ", statement] : indent([line, statement])
-      );
+      if (options.braceStyle === "next-line") {
+        forStatement.push(
+          hasStatementBlock ? statement : [hardline, statement]
+        );
+      } else {
+        forStatement.push(
+          hasStatementBlock ? [" ", statement] : indent([line, statement])
+        );
+      }
     }
     return group(forStatement);
   },
@@ -331,32 +374,52 @@ export default {
     ];
   },
 
-  tryStatement(path, print) {
+  tryStatement(path, print, options) {
     const { children } = path.node;
     if (children.tryWithResourcesStatement) {
       return call(path, print, "tryWithResourcesStatement");
     }
-    const blocks = ["try", call(path, print, "block")];
+    const tryBlock = formatWithBraces(
+      "try",
+      call(path, print, "block"),
+      options
+    );
+    const blocks: Doc[] = [tryBlock];
     if (children.catches) {
+      if (options.braceStyle === "next-line") {
+        blocks.push(hardline);
+      }
       blocks.push(call(path, print, "catches"));
     }
     if (children.finally) {
+      if (options.braceStyle === "next-line") {
+        blocks.push(hardline);
+      }
       blocks.push(call(path, print, "finally"));
     }
-    return join(" ", blocks);
+    return blocks;
   },
 
-  catches(path, print) {
-    return join(" ", map(path, print, "catchClause"));
+  catches(path, print, options) {
+    const catchClauses = map(path, print, "catchClause");
+    return catchClauses.map((catchClause, index) => {
+      if (options.braceStyle === "next-line") {
+        return index === 0 ? catchClause : [hardline, catchClause];
+      }
+      return [" ", catchClause];
+    });
   },
 
-  catchClause(path, print) {
-    return [
+  catchClause(path, print, options) {
+    const catchDeclaration = [
       "catch ",
-      indentInParentheses(call(path, print, "catchFormalParameter")),
-      " ",
-      call(path, print, "block")
+      indentInParentheses(call(path, print, "catchFormalParameter"))
     ];
+    return formatWithBraces(
+      catchDeclaration,
+      call(path, print, "block"),
+      options
+    );
   },
 
   catchFormalParameter(path, print) {
@@ -374,24 +437,39 @@ export default {
     );
   },
 
-  finally(path, print) {
-    return ["finally ", call(path, print, "block")];
+  finally(path, print, options) {
+    const finallyParts = formatWithBraces(
+      "finally",
+      call(path, print, "block"),
+      options
+    );
+    return options.braceStyle === "next-line"
+      ? finallyParts
+      : [" ", ...finallyParts];
   },
 
-  tryWithResourcesStatement(path, print) {
+  tryWithResourcesStatement(path, print, options) {
     const { children } = path.node;
-    const blocks = [
-      "try",
-      call(path, print, "resourceSpecification"),
-      call(path, print, "block")
-    ];
+    const tryDeclaration = ["try", call(path, print, "resourceSpecification")];
+    const tryBlock = formatWithBraces(
+      tryDeclaration,
+      call(path, print, "block"),
+      options
+    );
+    const blocks: Doc[] = [tryBlock];
     if (children.catches) {
+      if (options.braceStyle === "next-line") {
+        blocks.push(hardline);
+      }
       blocks.push(call(path, print, "catches"));
     }
     if (children.finally) {
+      if (options.braceStyle === "next-line") {
+        blocks.push(hardline);
+      }
       blocks.push(call(path, print, "finally"));
     }
-    return join(" ", blocks);
+    return blocks;
   },
 
   resourceSpecification(path, print) {

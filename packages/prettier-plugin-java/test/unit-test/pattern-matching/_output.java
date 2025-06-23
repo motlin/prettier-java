@@ -1,5 +1,4 @@
 class T {
-
   static String formatter(Object o) {
     String formatted = "unknown";
     if (

@@ -1,5 +1,4 @@
 class IfStatements {
-
   void commentsIfLineComment() {
     if (
       // test

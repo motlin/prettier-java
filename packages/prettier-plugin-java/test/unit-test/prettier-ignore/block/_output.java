@@ -3,7 +3,6 @@ package tech.jhipster;
 import java.util.Map;
 
 public class StrangePrettierIgnore {
-
   private StrangePrettierIgnore() {}
 
   public static void drinkBeers() {

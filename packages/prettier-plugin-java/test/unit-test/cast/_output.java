@@ -1,5 +1,4 @@
 public class Cast {
-
   void should_cast_with_single_element() {
     var myElem = (int) othrElement;
     var myElem = (A) othrElement;

@@ -5,7 +5,7 @@ describe("AmbiguousName", () => {
     expectSnippetToBeFormatted({
       snippet: "myAmbiguousName",
       expectedOutput: "myAmbiguousName",
-      entryPoint: "ambiguousName"
+      entryPoint: "ambiguousName",
     });
   });
 
@@ -13,7 +13,7 @@ describe("AmbiguousName", () => {
     expectSnippetToBeFormatted({
       snippet: "myAmbiguousName.with.lot.of.dots",
       expectedOutput: "myAmbiguousName.with.lot.of.dots",
-      entryPoint: "ambiguousName"
+      entryPoint: "ambiguousName",
     });
   });
 });
