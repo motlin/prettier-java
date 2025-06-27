@@ -8,3 +8,4 @@ CHANGELOG*
 website/build
 website/.docusaurus
 /.nx/workspace-data
+.claude/
