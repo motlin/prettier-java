@@ -1,7 +1,7 @@
 {
-  "name": "prettier-plugin-java",
-  "version": "2.7.4",
-  "description": "Prettier Java Plugin",
+  "name": "kempt",
+  "version": "2.7.4-beta.1",
+  "description": "Kempt - Prettier Java Plugin with Allman-style braces",
   "type": "module",
   "exports": {
     "types": "./dist/index.d.ts",
@@ -10,8 +10,8 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://jhipster.github.io/prettier-java/",
-  "repository": "https://github.com/jhipster/prettier-java",
+  "homepage": "https://github.com/craig-at-metaswitch/kempt",
+  "repository": "https://github.com/craig-at-metaswitch/kempt",
   "license": "Apache-2.0",
   "dependencies": {
     "java-parser": "3.0.1"
