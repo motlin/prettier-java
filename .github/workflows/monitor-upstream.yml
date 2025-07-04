@@ -1,0 +1,171 @@
+name: Monitor Upstream Changes
+
+on:
+  schedule:
+    # Run daily at 8 AM UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          
+      - name: Check for new releases
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get latest release from upstream
+            const upstreamOwner = 'jhipster';
+            const upstreamRepo = 'prettier-java';
+            
+            try {
+              const { data: latestRelease } = await github.rest.repos.getLatestRelease({
+                owner: upstreamOwner,
+                repo: upstreamRepo
+              });
+              
+              // Check if we've already processed this release
+              const processedReleases = new Set();
+              try {
+                const { data: issues } = await github.rest.issues.listForRepo({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  labels: 'upstream-release',
+                  state: 'all'
+                });
+                
+                issues.forEach(issue => {
+                  const match = issue.title.match(/Release (v?[\d.]+)/);
+                  if (match) processedReleases.add(match[1]);
+                });
+              } catch (e) {
+                console.log('No previous release issues found');
+              }
+              
+              const releaseTag = latestRelease.tag_name;
+              
+              if (!processedReleases.has(releaseTag)) {
+                // Create issue for new release
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `📦 Upstream Release ${releaseTag}`,
+                  body: `## New Upstream Release Available
+                  
+A new version of prettier-java has been released: [${releaseTag}](${latestRelease.html_url})
+
+**Release Date**: ${new Date(latestRelease.published_at).toLocaleDateString()}
+
+### Release Notes
+
+${latestRelease.body || 'No release notes provided.'}
+
+### Recommended Actions
+
+1. Review the changes in this release
+2. Run the sync workflow to incorporate changes
+3. Test thoroughly with Kempt-specific features
+4. Update our changelog if merging
+
+---
+
+*This issue was automatically created by the upstream monitoring workflow.*`,
+                  labels: ['upstream-release', 'needs-review']
+                });
+                
+                console.log(`Created issue for new release: ${releaseTag}`);
+                core.setOutput('new_release', releaseTag);
+              } else {
+                console.log(`Release ${releaseTag} already processed`);
+                core.setOutput('new_release', '');
+              }
+            } catch (error) {
+              console.error('Error checking releases:', error);
+              core.setFailed(error.message);
+            }
+      
+      - name: Check recent commits
+        id: commits
+        run: |
+          git remote add upstream https://github.com/jhipster/prettier-java.git || true
+          git fetch upstream main --depth=50
+          
+          # Get commits from last 7 days
+          WEEK_AGO=$(date -d '7 days ago' +%Y-%m-%d)
+          
+          echo "### Recent upstream commits (last 7 days):" >> $GITHUB_STEP_SUMMARY
+          
+          COMMIT_COUNT=$(git log upstream/main --since="$WEEK_AGO" --oneline | wc -l)
+          
+          if [ $COMMIT_COUNT -gt 0 ]; then
+            echo "Found $COMMIT_COUNT new commits in upstream" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            git log upstream/main --since="$WEEK_AGO" --pretty=format:"- %h %s (%an, %ar)" >> $GITHUB_STEP_SUMMARY
+            echo "high_activity=true" >> $GITHUB_OUTPUT
+          else
+            echo "No new commits in the last 7 days" >> $GITHUB_STEP_SUMMARY
+            echo "high_activity=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create activity summary
+        if: steps.commits.outputs.high_activity == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Only create a summary issue once per week for high activity
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            
+            // Only run on Mondays
+            if (dayOfWeek !== 1) {
+              console.log('Not Monday, skipping weekly summary');
+              return;
+            }
+            
+            // Check if we already created a summary this week
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - 7);
+            
+            const { data: recentIssues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'upstream-activity',
+              since: weekStart.toISOString()
+            });
+            
+            if (recentIssues.length > 0) {
+              console.log('Weekly summary already created');
+              return;
+            }
+            
+            // Create weekly activity summary
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📊 Weekly Upstream Activity Report - ${today.toLocaleDateString()}`,
+              body: `## Upstream Activity Summary
+              
+High activity detected in the upstream prettier-java repository.
+
+See the [workflow summary](${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}) for commit details.
+
+### Recommended Actions
+
+- Review recent changes for potential impacts
+- Consider running a sync if significant changes are present
+- Monitor for any breaking changes
+
+---
+
+*This summary was automatically generated by the upstream monitoring workflow.*`,
+              labels: ['upstream-activity']
+            });

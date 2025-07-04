@@ -1,0 +1,155 @@
+name: Sync with Upstream
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      sync_branch:
+        description: 'Branch to sync from upstream'
+        required: false
+        default: 'main'
+        type: string
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Add upstream remote
+        run: |
+          git remote add upstream https://github.com/jhipster/prettier-java.git || true
+          git fetch upstream
+      
+      - name: Create sync branch
+        id: sync
+        run: |
+          UPSTREAM_BRANCH="${{ github.event.inputs.sync_branch || 'main' }}"
+          SYNC_BRANCH="sync-upstream-$(date +%Y%m%d-%H%M%S)"
+          
+          echo "upstream_branch=$UPSTREAM_BRANCH" >> $GITHUB_OUTPUT
+          echo "sync_branch=$SYNC_BRANCH" >> $GITHUB_OUTPUT
+          
+          # Create a new branch from our main
+          git checkout -b "$SYNC_BRANCH" origin/main
+          
+          # Try to merge upstream changes
+          if git merge upstream/"$UPSTREAM_BRANCH" --no-edit; then
+            echo "merge_success=true" >> $GITHUB_OUTPUT
+            echo "✅ Successfully merged upstream changes" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "merge_success=false" >> $GITHUB_OUTPUT
+            echo "❌ Merge conflicts detected" >> $GITHUB_STEP_SUMMARY
+            
+            # Show conflict details
+            echo "### Conflicts in the following files:" >> $GITHUB_STEP_SUMMARY
+            git diff --name-only --diff-filter=U >> $GITHUB_STEP_SUMMARY
+            
+            # Abort the merge
+            git merge --abort
+            
+            # Cherry-pick what we can
+            echo "### Attempting to cherry-pick non-conflicting commits..." >> $GITHUB_STEP_SUMMARY
+            MERGE_BASE=$(git merge-base HEAD upstream/"$UPSTREAM_BRANCH")
+            COMMITS=$(git rev-list --reverse $MERGE_BASE..upstream/"$UPSTREAM_BRANCH")
+            
+            for commit in $COMMITS; do
+              if git cherry-pick $commit 2>/dev/null; then
+                echo "✅ Cherry-picked: $(git log -1 --oneline $commit)" >> $GITHUB_STEP_SUMMARY
+              else
+                git cherry-pick --abort 2>/dev/null || true
+                echo "❌ Could not cherry-pick: $(git log -1 --oneline $commit)" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          fi
+          
+          # Check if there are any changes to push
+          if git diff --quiet origin/main; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes to sync from upstream" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            git push origin "$SYNC_BRANCH"
+          fi
+      
+      - name: Create Pull Request
+        if: steps.sync.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.sync.outputs.sync_branch }}
+          base: main
+          title: '🔄 Sync with upstream prettier-java'
+          body: |
+            ## Upstream Sync
+            
+            This PR syncs changes from the upstream [prettier-java](https://github.com/jhipster/prettier-java) repository.
+            
+            - **Source branch**: `upstream/${{ steps.sync.outputs.upstream_branch }}`
+            - **Merge status**: ${{ steps.sync.outputs.merge_success == 'true' && '✅ Clean merge' || '⚠️ Manual conflict resolution required' }}
+            
+            ### What to do next:
+            
+            ${{ steps.sync.outputs.merge_success == 'true' && '1. Review the changes\n2. Run tests locally\n3. Merge when ready' || '1. Checkout this branch locally\n2. Resolve merge conflicts\n3. Push the resolved changes\n4. Run tests\n5. Merge when ready' }}
+            
+            ### Automated sync details:
+            
+            <details>
+            <summary>View sync summary</summary>
+            
+            ```
+            ${{ steps.sync.outputs.summary || 'See workflow run for details' }}
+            ```
+            
+            </details>
+          labels: |
+            upstream-sync
+            ${{ steps.sync.outputs.merge_success == 'false' && 'has-conflicts' || '' }}
+          assignees: ${{ github.repository_owner }}
+      
+      - name: Create Issue for Conflicts
+        if: steps.sync.outputs.has_changes == 'true' && steps.sync.outputs.merge_success == 'false'
+        uses: peter-evans/create-issue-from-file@v4
+        with:
+          title: '⚠️ Upstream sync conflicts detected'
+          content-filepath: /dev/stdin
+          labels: upstream-sync, needs-attention
+          assignees: ${{ github.repository_owner }}
+        with: |
+          ## Upstream Sync Conflicts
+          
+          The automated sync with upstream prettier-java has detected merge conflicts that require manual resolution.
+          
+          **Pull Request**: See the latest PR with the `upstream-sync` and `has-conflicts` labels
+          
+          ### Affected files:
+          
+          Check the PR description for the list of conflicting files.
+          
+          ### Resolution steps:
+          
+          1. Checkout the sync branch locally
+          2. Resolve conflicts manually  
+          3. Test the changes
+          4. Push the resolved changes
+          5. Merge the PR when ready
+          
+          ---
+          
+          *This issue was automatically created by the upstream sync workflow.*
