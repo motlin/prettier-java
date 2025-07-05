@@ -37,6 +37,7 @@
     "eslint-config-prettier": "9.1.0",
     "fs-extra": "11.2.0",
     "husky": "9.1.6",
+    "kempt": "^2.7.4-beta.1",
     "klaw-sync": "6.0.0",
     "lerna": "8.1.9",
     "lint-staged": "15.2.10",

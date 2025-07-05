@@ -1,6 +1,6 @@
 {
   "name": "kempt",
-  "version": "2.7.4-beta.1",
+  "version": "2.7.4-beta.2",
   "description": "Kempt - Prettier Java Plugin with Allman-style braces",
   "type": "module",
   "exports": {
