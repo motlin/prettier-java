@@ -302,7 +302,9 @@ export default {
 
   exceptionType: printSingle,
   methodBody: printSingle,
-  instanceInitializer: printSingle,
+  instanceInitializer(path, print) {
+    return call(path, print, "block");
+  },
 
   staticInitializer(path, print, options) {
     return formatWithBraces("static", call(path, print, "block"), options);

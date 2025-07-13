@@ -1,18 +1,11 @@
-import { testSample } from "../../test-utils.js";
+import path from "path";
+import url from "url";
+import { testSampleWithOptions } from "../../test-utils.js";
+
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 describe("else-if formatting", () => {
-  // With default braceStyle (same-line)
-  testSample(__dirname, "else-if-input", {
-    prettierOptions: {
-      braceStyle: "same-line",
-    },
-  });
-
-  // With next-line braceStyle
-  testSample(__dirname, "else-if-input", {
-    prettierOptions: {
-      braceStyle: "next-line",
-    },
-    expectedSampleSuffix: "-next-line",
+  testSampleWithOptions({
+    testFolder: __dirname,
   });
 });

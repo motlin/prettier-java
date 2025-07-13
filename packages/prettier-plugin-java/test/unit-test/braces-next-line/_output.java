@@ -282,32 +282,25 @@ class SynchronizedExample
 class HelperMethods
 {
   void riskyOperation() throws Exception
-  {
-  }
+  {}
 
   void handleError(Exception e)
-  {
-  }
+  {}
 
   void handleIOError(IOException e)
-  {
-  }
+  {}
 
   void handleSQLError(SQLException e)
-  {
-  }
+  {}
 
   void cleanup()
-  {
-  }
+  {}
 
   void readFile(FileInputStream fis)
-  {
-  }
+  {}
 
   void processString(String s)
-  {
-  }
+  {}
 }
 
 // Test empty blocks for all constructs
@@ -315,46 +308,38 @@ class EmptyBlocksTest
 {
   // Empty class declaration
   static class EmptyClass
-  {
-  }
+  {}
 
   // Empty interface declaration
   interface EmptyInterface
-  {
-  }
+  {}
 
   // Empty enum
   enum EmptyEnum
-  {
-  }
+  {}
 
   // Empty method
   void emptyMethod()
-  {
-  }
+  {}
 
   // Empty constructor
   EmptyBlocksTest()
-  {
-  }
+  {}
 
   // Empty static initializer
   static
-  {
-  }
+  {}
 
   // Empty instance initializer
 
-  {
-  }
+  {}
 
   // Empty blocks in statements
   void testEmptyStatementBlocks()
   {
     // Empty if
     if (true)
-    {
-    }
+    {}
 
     // Empty else
     if (false)
@@ -362,34 +347,28 @@ class EmptyBlocksTest
       System.out.println("not empty");
     }
     else
-    {
-    }
+    {}
 
     // Empty while
     while (false)
-    {
-    }
+    {}
 
     // Empty do-while
     do
-    {
-    }
+    {}
     while (false);
 
     // Empty for
     for (int i = 0; i < 0; i++)
-    {
-    }
+    {}
 
     // Empty enhanced for
     for (String s : new String[0])
-    {
-    }
+    {}
 
     // Empty try
     try
-    {
-    }
+    {}
     catch (Exception e)
     {
       e.printStackTrace();
@@ -401,8 +380,7 @@ class EmptyBlocksTest
       throw new Exception();
     }
     catch (Exception e)
-    {
-    }
+    {}
 
     // Empty finally
     try
@@ -410,41 +388,33 @@ class EmptyBlocksTest
       System.out.println("try");
     }
     finally
-    {
-    }
+    {}
 
     // Empty try-catch-finally
     try
-    {
-    }
+    {}
     catch (Exception e)
-    {
-    }
+    {}
     finally
-    {
-    }
+    {}
 
     // Empty synchronized
     synchronized (this)
-    {
-    }
+    {}
 
     // Empty switch
     switch (1)
-    {
-    }
+    {}
 
     // Empty anonymous class
     Runnable r = new Runnable()
     {
       public void run()
-      {
-      }
+      {}
     };
 
     // Empty lambda block
     Runnable lambda = () ->
-    {
-    };
+    {};
   }
 }

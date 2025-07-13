@@ -286,7 +286,7 @@ export function printBlock(
             hardline,
             "}"
           ]
-        : [hardline, "{", hardline, "}"];
+        : [hardline, "{", "}"];
     }
     return danglingComments.length
       ? ["{", indent([hardline, ...danglingComments]), hardline, "}"]
