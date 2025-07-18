@@ -1,3 +1,5 @@
+plugins:
+  - "./packages/prettier-plugin-java/dist/index.js"
 trailingComma: "none"
 useTabs: false
 tabWidth: 2
