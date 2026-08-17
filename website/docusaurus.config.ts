@@ -14,8 +14,8 @@ const baseUrl = `/${projectName}/`;
 const editUrl = `${repository}/tree/main/website/`;
 
 export default {
-  title: "Prettier Java",
-  tagline: "Prettier code formatter plugin for Java",
+  title: "Prettier Java Next Line",
+  tagline: "Java formatting with structurally aligned braces",
   favicon: "img/favicon.png",
   trailingSlash: false,
   url,
@@ -31,7 +31,7 @@ export default {
       "classic",
       {
         docs: { editUrl },
-        blog: { editUrl },
+        blog: false,
         theme: {
           customCss: "./src/css/custom.css"
         }
@@ -44,16 +44,15 @@ export default {
     },
     image: "img/banner-dark.png",
     navbar: {
-      title: "Prettier Java",
+      title: "Prettier Java Next Line",
       logo: {
-        alt: "Prettier Java Logo",
+        alt: "Prettier Java Next Line Logo",
         src: "img/icon.svg",
         srcDark: "img/icon-dark.svg"
       },
       items: [
         { label: "Playground", to: "/playground", position: "left" },
         { label: "Docs", to: "/docs", position: "left" },
-        { label: "Blog", to: "/blog", position: "left" },
         { label: "GitHub", to: repository, position: "right" }
       ]
     },
@@ -61,25 +60,28 @@ export default {
       style: "dark",
       links: [
         {
-          title: "Docs",
+          title: "Project",
           items: [
-            { label: "Introduction", to: "/docs" },
+            { label: "Why Next Line", to: "/docs" },
             { label: "Installation", to: "/docs/installation" }
           ]
         },
         {
-          title: "Community",
+          title: "Upstream",
           items: [
             {
-              label: "@JHipster on Twitter",
-              to: "https://twitter.com/jhipster"
+              label: "Prettier Java",
+              to: "https://github.com/jhipster/prettier-java"
+            },
+            {
+              label: "Declined Proposal",
+              to: "https://github.com/jhipster/prettier-java/pull/840"
             }
           ]
         },
         {
           title: "More",
           items: [
-            { label: "Blog", to: "/blog" },
             { label: "GitHub", to: repository },
             { label: "Issues", to: `${repository}/issues` }
           ]

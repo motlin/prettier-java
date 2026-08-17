@@ -1,33 +1,34 @@
-# Introduction
+# Prettier Java Next Line
 
-Prettier Java is an opinionated Java code formatter.
+Prettier Java Next Line forks [Prettier Java](https://github.com/jhipster/prettier-java) to add configurable brace placement, defaulting to `next-line`.
 
-It removes all original styling and ensures that all outputted code conforms to a consistent style.
+## Why next line is the default
 
-Prettier Java takes your code and reprints it from scratch by taking the line length into account.
+Same-line formatting made sense on small, low-resolution CRT displays where every row counted.
 
-For example, take the following code:
-
-```java
-foo(arg1, arg2, arg3, arg4);
-```
-
-It fits in a single line so it's going to stay as is. However, we've all run into this situation:
-
-<!-- prettier-ignore -->
-```java
-foo(reallyLongArg(), omgSoManyParameters(), IShouldRefactorThis(), isThereSeriouslyAnotherOne());
-```
-
-Suddenly our previous format for calling function breaks down because this is too long. Prettier Java is going to do the painstaking work of reprinting it like that for you:
+On a modern display, we would rather spend one extra line and see the shape of the block.
 
 ```java
-foo(
-  reallyLongArg(),
-  omgSoManyParameters(),
-  IShouldRefactorThis(),
-  isThereSeriouslyAnotherOne()
-);
+public class Example
+{
+	public void run()
+	{
+		if (ready)
+		{
+			start();
+		}
+	}
+}
 ```
 
-Prettier Java enforces a consistent code **style** (i.e. code formatting that won't affect the AST) across your entire codebase because it disregards the original styling by parsing it away and re-printing the parsed AST with its own rules that take the maximum line length into account, wrapping code when necessary.
+## What changed
+
+The fork adds `braceStyle`. [Upstream declined the option](https://github.com/jhipster/prettier-java/pull/840) because Prettier Java intentionally supports one brace style.
+
+```json
+{
+	"braceStyle": "same-line"
+}
+```
+
+Everything else follows the [upstream documentation](https://github.com/jhipster/prettier-java#readme).
