@@ -4,8 +4,18 @@
 }
 
 .logoWide {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   max-width: 685px;
+}
+
+.heroTitle {
+  margin-bottom: 0.5rem;
+}
+
+.heroSubtitle {
+  margin: 0 auto 2rem;
+  max-width: 680px;
+  font-size: 1.25rem;
 }
 
 .buttons {
@@ -14,15 +24,49 @@
   gap: 1rem;
 }
 
-.tldrSection {
-  flex: 1;
+.section {
+  padding: 4rem 0;
 }
 
-.sectionRow {
-  justify-content: space-evenly;
+.sectionInner {
+  max-width: 900px;
 }
 
-.sectionCol {
-  flex: initial;
-  width: fit-content;
+.sectionInner > h2 {
+  text-align: center;
+}
+
+.lead {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.codeComparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.codeComparison h3 {
+  text-align: center;
+}
+
+.codeComparison pre {
+  height: calc(100% - 2.5rem);
+}
+
+.rationaleSection {
+  background: var(--ifm-color-emphasis-100);
+}
+
+@media (max-width: 700px) {
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .codeComparison {
+    grid-template-columns: 1fr;
+  }
 }

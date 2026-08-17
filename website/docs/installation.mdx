@@ -1,34 +1,35 @@
-import TabItem from "@theme/TabItem";
-import Tabs from "@theme/Tabs";
-
 # Installation
 
-## Requirements
+Follow the [Prettier Java instructions](https://github.com/jhipster/prettier-java#readme), replacing `prettier-plugin-java` with `prettier-java-next-line`.
 
-- [Node.js](https://nodejs.org/en/download/) version 10.0 or above
+```sh
+npm install --save-dev --save-exact prettier prettier-java-next-line
+```
 
-## Install Prettier and the Prettier Java plugin
+Load `prettier-java-next-line` as the plugin. Next-line braces need no option; use `braceStyle: "same-line"` to restore upstream placement.
 
-<Tabs>
-  <TabItem value="npm">
+## Prettier Next Line
 
-    ```sh
-    npm install --save-dev --save-exact prettier prettier-plugin-java
-    ```
+To use next-line formatting for Prettier's built-in languages too, install [Prettier Next Line](https://github.com/motlin/prettier-next-line) under the name `prettier`:
 
-  </TabItem>
-  <TabItem value="Yarn">
+```sh
+npm install --save-dev --save-exact prettier@npm:prettier-next-line prettier-java-next-line
+```
 
-    ```sh
-    yarn add --dev --exact prettier prettier-plugin-java
-    ```
+## Spotless Maven
 
-  </TabItem>
-  <TabItem value="pnpm">
+Spotless expects a package named `prettier`, so alias the runtime fork and load the Java plugin by its published name.
 
-    ```sh
-    pnpm add --save-dev --save-exact prettier prettier-plugin-java
-    ```
-
-  </TabItem>
-</Tabs>
+```xml
+<prettier>
+	<devDependencies>
+		<prettier>npm:prettier-next-line@3.10.0</prettier>
+		<prettier-java-next-line>2.10.3</prettier-java-next-line>
+	</devDependencies>
+	<configFile>.prettierrc.json</configFile>
+	<config>
+		<parser>java</parser>
+		<plugins>prettier-java-next-line</plugins>
+	</config>
+</prettier>
+```

@@ -15,6 +15,7 @@ interface State {
   arrowParens?: ArrowParens;
   trailingComma?: TrailingComma;
   experimentalOperatorPosition?: ExperimentalOperatorPosition;
+  braceStyle?: BraceStyle;
   requirePragma?: boolean;
   code?: string;
 }
@@ -33,6 +34,11 @@ enum TrailingComma {
 enum ExperimentalOperatorPosition {
   Start = "start",
   End = "end"
+}
+
+enum BraceStyle {
+  NextLine = "next-line",
+  SameLine = "same-line"
 }
 
 const codeSample = `public interface MyInterface {
@@ -77,6 +83,9 @@ export default function Playground() {
       initialState.experimentalOperatorPosition ??
         ExperimentalOperatorPosition.End
     );
+  const [braceStyle, setBraceStyle] = useState(
+    initialState.braceStyle ?? BraceStyle.NextLine
+  );
   const [requirePragma, setRequirePragma] = useState(
     initialState.requirePragma ?? false
   );
@@ -96,6 +105,7 @@ export default function Playground() {
         arrowParens,
         trailingComma,
         experimentalOperatorPosition,
+        braceStyle,
         requirePragma,
         code
       });
@@ -112,6 +122,7 @@ export default function Playground() {
         arrowParens,
         trailingComma,
         experimentalOperatorPosition,
+        braceStyle,
         requirePragma
       })
       .then(setFormattedCode)
@@ -123,6 +134,7 @@ export default function Playground() {
     arrowParens,
     trailingComma,
     experimentalOperatorPosition,
+    braceStyle,
     requirePragma,
     code
   ]);
@@ -200,6 +212,19 @@ export default function Playground() {
                   }
                 >
                   {Object.values(ExperimentalOperatorPosition).map(option => (
+                    <option key={option}>{option}</option>
+                  ))}
+                </select>
+              </label>
+              <label title="Where to print opening braces.">
+                --brace-style{" "}
+                <select
+                  value={braceStyle}
+                  onChange={event =>
+                    setBraceStyle(event.target.value as BraceStyle)
+                  }
+                >
+                  {Object.values(BraceStyle).map(option => (
                     <option key={option}>{option}</option>
                   ))}
                 </select>
