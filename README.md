@@ -1,24 +1,18 @@
 # Prettier Java Next Line
 
-Prettier Java Next Line forks
-[prettier-plugin-java](https://github.com/jhipster/prettier-java) to make brace
-placement configurable, with next-line braces as the default.
+Prettier Java Next Line forks [prettier-plugin-java](https://github.com/jhipster/prettier-java) to make brace placement configurable, with next-line braces as the default.
 
-[Upstream declined the option](https://github.com/jhipster/prettier-java/pull/840)
-because Prettier Java intentionally supports one brace style.
+[Upstream declined the option](https://github.com/jhipster/prettier-java/pull/840) because Prettier Java intentionally supports one brace style.
 
 ## Why next line is the default
 
-Same-line formatting made sense on small, low-resolution CRT displays where
-every row counted.
+Same-line formatting made sense on small, low-resolution CRT displays where every row counted.
 
-On a modern display, we would rather spend one extra line and see the shape of
-the block.
+On a modern display, we would rather spend one extra line and see the shape of the block.
 
 ## Install
 
-Follow the [upstream instructions](https://github.com/jhipster/prettier-java#readme),
-replacing `prettier-plugin-java` with `prettier-java-next-line`:
+Follow the [upstream instructions](https://github.com/jhipster/prettier-java#readme), replacing `prettier-plugin-java` with `prettier-java-next-line`:
 
 ```bash
 npm install --save-dev prettier prettier-java-next-line
@@ -41,8 +35,7 @@ Set `braceStyle` only when a project needs the inherited same-line style:
 }
 ```
 
-To use the matching Prettier runtime fork too, install it under the name
-`prettier` with an npm alias:
+To use the matching Prettier runtime fork too, install it under the name `prettier` with an npm alias:
 
 ```bash
 npm install --save-dev \
@@ -52,8 +45,7 @@ npm install --save-dev \
 
 ## Spotless Maven
 
-Spotless loads a package named `prettier`, so install Prettier Next Line under
-that name with an npm alias:
+Spotless loads a package named `prettier`, so install Prettier Next Line under that name with an npm alias:
 
 ```xml
 <prettier>
@@ -86,8 +78,7 @@ public class Example
 
 ## Upstream
 
-Except for brace placement, behavior comes from
-[Prettier Java](https://github.com/jhipster/prettier-java#readme).
+Except for brace placement, behavior comes from [Prettier Java](https://github.com/jhipster/prettier-java#readme).
 
 ## License
 
